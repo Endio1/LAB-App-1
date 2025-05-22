@@ -151,19 +151,39 @@ if uploaded_file:
     fig_dual.update_layout(title="ACE Before vs Estimated (Bright Colors)", xaxis_title="Timestamp", yaxis_title="Value")
     st.plotly_chart(fig_dual, use_container_width=True)
 
+    # ------------------- ADDITIONAL PLOTS -------------------
+    st.subheader("📦 Boxplot of ACE Signals")
+    fig_box = px.box(
+        table2.melt(value_vars=["ace_before", "ace_after", "estimated"]),
+        x='variable',
+        y='value',
+        title="Boxplot of ACE Signals"
+    )
+    st.plotly_chart(fig_box, use_container_width=True)
+
+    st.subheader("🔴 Anomalies Over Time")
+    anomalies = table1[table1['is_anomaly']]
+    fig_anomaly = go.Figure()
+
+    fig_anomaly.add_trace(go.Scatter(
+        x=anomalies['timestamp'],
+        y=anomalies['error'],
+        mode='lines+markers',
+        marker=dict(color='red'),
+        name='Anomaly Error'
+    ))
+
+    fig_anomaly.update_layout(
+        title="Anomalies Over Time",
+        xaxis_title="Timestamp",
+        yaxis_title="Error",
+        template="plotly_dark"  # optional: dark theme like your screenshot
+    )
+
+    st.plotly_chart(fig_anomaly, use_container_width=True)
+
+
 else:
     st.info("Please upload a valid Excel file with columns: `timestamp`, `ace_before`, `ace_after`.")
-    # ------------------- ADDITIONAL PLOTS -------------------
-
-     st.subheader("📦 Boxplot of ACE Signals")
-     fig_box = px.box(table2, y=["ace_before", "ace_after", "estimated"], title="Boxplot of ACE Signals")
-     st.plotly_chart(fig_box, use_container_width=True)
-
-     st.subheader("🔴 Anomalies Over Time")
-     anomalies = table1[table1['is_anomaly']]
-     fig_anomaly = px.scatter(anomalies, x='timestamp', y='error',
-                              color_discrete_sequence=["red"],
-                              title="Anomalies Over Time")
-     st.plotly_chart(fig_anomaly, use_container_width=True)
-
+   
     #python -m streamlit run app.py (to run, write or copy this in the terminal)
