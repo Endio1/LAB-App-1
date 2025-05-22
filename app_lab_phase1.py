@@ -152,7 +152,7 @@ if uploaded_file:
     st.plotly_chart(fig_dual, use_container_width=True)
 
     # ------------------- ADDITIONAL PLOTS -------------------
-    st.subheader("📦 Boxplot of ACE Signals (Colorful)")
+    st.subheader("📦 Boxplot of ACE Signals")
 
     melted_df = table2.melt(value_vars=["ace_before", "ace_after", "estimated"],
                             var_name='Signal Type', value_name='ACE Value')
